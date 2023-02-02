@@ -16,6 +16,8 @@ def entry(fn : str, operation : int, values : str | list):
 
     DB.execute(f"Insert into images(file_name, value, operation) values ('{fn}', '{value}', {operation});")
     connection.commit()
+    DB.execute('Select * from images')
+    print(DB.fetchall())
 
 def undo(fn, steps):
     from photoshop import Filters
@@ -48,24 +50,23 @@ def undo(fn, steps):
     return image
 
 def get_operation(value : int) -> str:
-        if   value == 1:
-            return 'negetive'
-        elif value == 2:
-            return 'mul_channel'
-        elif value == 3:
-            return 'add_channel'
-        elif value == 4:
-            return 'greyscale'
-        elif value == 5:
-            return 'sepia'
-        elif value == 6:
-            return 'brightness'
-        elif value == 7:
-            return 'contrast'
-        return 'single_channel'
+    if   value == 1:
+        return 'negetive'
+    elif value == 2:
+        return 'mul_channel'
+    elif value == 3:
+        return 'add_channel'
+    elif value == 4:
+        return 'greyscale'
+    elif value == 5:
+        return 'sepia'
+    elif value == 6:
+        return 'brightness'
+    elif value == 7:
+        return 'contrast'
+    return 'single_channel'
 
 def get_dataframe(fn : str):
     DB.execute("select * from images;")
     data = list(filter(lambda x : True if x[0] == fn else False, DB.fetchall()))
-    print(data)
     return DataFrame(data, columns=["File Name", "Values used", "Operation"])
